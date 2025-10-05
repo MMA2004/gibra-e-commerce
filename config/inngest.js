@@ -2,10 +2,10 @@ import { Inngest } from "inngest";
 import connectDB from "@/config/db";
 
 // Create a client to send and receive events
-export const inngest = new Inngest({ id: "gibra-e-commerce" });
+export const inngest = new Inngest({ id: "gibra" });
 
 // Inngest Function to save user data to database
-export const syncUserCreation = inngest.CreateFunction (
+export const syncUserCreation = inngest.createFunction (
     {
         id: 'sync-user-from-clerk',
     },
@@ -26,7 +26,7 @@ export const syncUserCreation = inngest.CreateFunction (
 )
 
 // Inngest Function to update user dara in database
-export const syncUserUpdation = inngest.CreateFunction (
+export const syncUserUpdation = inngest.createFunction (
     {
         id: 'update-user-from-clerk',
     },
@@ -47,12 +47,12 @@ export const syncUserUpdation = inngest.CreateFunction (
 )
 
 // Inngest Function to delete user from database
-export const syncUserDeletion = inngest.CreateFunction (
+export const syncUserDeletion = inngest.createFunction (
     {
         id: 'delete-user-from-clerk',
     },
     {
-        event: 'clerk/user.delete',
+        event: 'clerk/user.deleted',
     },
     async ({event} ) => {
         const {id} = event.data;
