@@ -36,15 +36,14 @@ export async function POST(request) {
                 const arrayBuffer = await file.arrayBuffer();
                 const buffer = Buffer.from(arrayBuffer);
 
-                const safeName = file?.name ?? `image-${uuid()}.jpg`;
-                const objectPath = `productos/${Date.now()}-${safeName}`;
+                const objectPath = `productos/${Date.now()}-${file.name}`;
                 const fileRef = bucket.file(objectPath);
 
                 // Generar un token de descarga único
                 const downloadToken = uuid();
 
                 await fileRef.save(buffer, {
-                    contentType: file?.type ?? "application/octet-stream",
+                    contentType: file.type || "application/octet-stream",
                     metadata: {
                         metadata: {
                             firebaseStorageDownloadTokens: downloadToken, // Necesario para la URL pública
