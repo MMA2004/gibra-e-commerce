@@ -57,7 +57,7 @@ export default function TestUpload() {
                             </li>
                         ))}
                     </ul>
-                    <img src={urls[0]} width="250"  alt={}/>
+                    <img src={urls[0]} width="250"  alt={"Imagen subida"}/>
                 </div>
             )}
         </div>
