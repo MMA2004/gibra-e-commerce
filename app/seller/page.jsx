@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 const AddProduct = () => {
 
@@ -14,6 +15,49 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const chosen = files.filter(Boolean); // quita undefined
+    if (chosen.length === 0) {
+      toast.error("Selecciona al menos 1 imagen");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("price", price);
+    formData.append("offerPrice", offerPrice);
+
+    chosen.forEach((f) => formData.append("images", f));
+
+    try {
+
+      const res = await fetch("/api/product/add", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        toast.success(data.message);
+        setFiles([])
+        setName('')
+        setDescription('')
+        setCategory('Earphone');
+        setPrice('');
+        setOfferPrice('');
+      } else {
+        toast.error(data.message);
+      }
+
+    } catch (error){
+      toast.error(error.message);
+    }
+
+
 
   };
 
