@@ -23,7 +23,7 @@ const OrderSummary = () => {
           setSelectedAddress(data.address[0]);
         }
       } else {
-
+          toast.error(data.message);
       }
 
     } catch (e) {
