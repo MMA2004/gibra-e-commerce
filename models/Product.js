@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema({
     category: { type: String, required: true },
     date: { type: Number, required: true },
     isFeatured: { type: Boolean, default: false },
+    isHeader: { type: Boolean, default: false },
 })
 
 const Product = mongoose.models.product || mongoose.model("product", productSchema)

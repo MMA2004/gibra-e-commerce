@@ -60,6 +60,27 @@ const ProductList = () => {
     }
   }
 
+  const toggleHeader = async (productId) => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.post('/api/product/toggle-header', { productId }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (data.success) {
+        toast.success(data.message);
+        // Update local state
+        setProducts(prevProducts => prevProducts.map(product =>
+          product._id === productId ? { ...product, isHeader: data.isHeader } : product
+        ));
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
   useEffect(() => {
     if (user) {
       fetchSellerProduct();
@@ -78,6 +99,7 @@ const ProductList = () => {
                 <th className="px-4 py-3 font-medium truncate max-sm:hidden">Category</th>
                 <th className="px-4 py-3 font-medium truncate">Price</th>
                 <th className="px-4 py-3 font-medium truncate">Featured</th>
+                <th className="px-4 py-3 font-medium truncate">Header</th>
                 <th className="px-4 py-3 font-medium truncate max-sm:hidden">Action</th>
               </tr>
             </thead>
@@ -105,6 +127,14 @@ const ProductList = () => {
                       type="checkbox"
                       checked={product.isFeatured || false}
                       onChange={() => toggleFeatured(product._id)}
+                      className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"
+                    />
+                  </td>
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={product.isHeader || false}
+                      onChange={() => toggleHeader(product._id)}
                       className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"
                     />
                   </td>

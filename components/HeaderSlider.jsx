@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useAppContext } from "@/context/AppContext";
 
 const HeaderSlider = () => {
-  const router = useRouter();
+
   const sliderData = [
     {
       id: 1,
@@ -32,14 +32,18 @@ const HeaderSlider = () => {
     },
   ];
 
+  const { router, products } = useAppContext()
+
+  const headerProducts = products.filter(product => product.isHeader);
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % sliderData.length);
+      setCurrentSlide((prev) => (prev + 1) % headerProducts.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, [sliderData.length]);
+  }, [headerProducts.length]);
 
   const handleSlideChange = (index) => {
     setCurrentSlide(index);
@@ -53,30 +57,31 @@ const HeaderSlider = () => {
           transform: `translateX(-${currentSlide * 100}%)`,
         }}
       >
-        {sliderData.map((slide, index) => (
+        {headerProducts.map((slide, index) => (
           <div
-            key={slide.id}
+            key={slide._id}
             className="flex flex-col-reverse md:flex-row items-center justify-between bg-[#E6E9F2] py-8 md:px-14 px-5 mt-6 rounded-xl min-w-full"
           >
             <div className="md:pl-8 mt-10 md:mt-0">
-              <p className="md:text-base text-orange-600 pb-1">{slide.offer}</p>
               <h1 className="max-w-lg md:text-[40px] md:leading-[48px] text-2xl font-semibold">
-                {slide.title}
+                {slide.name}
               </h1>
               <div className="flex items-center mt-4 md:mt-6 ">
-                <button onClick={() => router.push('/all-products')} className="md:px-10 px-7 md:py-2.5 py-2 bg-orange-600 rounded-full text-white font-medium">
-                  {slide.buttonText1}
+                <button onClick={() => router.push(`/product/${slide._id}`)} className="md:px-10 px-7 md:py-2.5 py-2 bg-orange-600 rounded-full text-white font-medium">
+                  {"Buy now"}
                 </button>
                 <button onClick={() => router.push('/all-products')} className="group flex items-center gap-2 px-6 py-2.5 font-medium">
-                  {slide.buttonText2}
+                  {"Find more"}
                   <Image className="group-hover:translate-x-1 transition" src={assets.arrow_icon} alt="arrow_icon" />
                 </button>
               </div>
             </div>
             <div className="flex items-center flex-1 justify-center">
               <Image
+                width={500}
+                height={500}
                 className="md:w-72 w-48"
-                src={slide.imgSrc}
+                src={slide.image[0]}
                 alt={`Slide ${index + 1}`}
               />
             </div>
@@ -85,7 +90,7 @@ const HeaderSlider = () => {
       </div>
 
       <div className="flex items-center justify-center gap-2 mt-8">
-        {sliderData.map((_, index) => (
+        {headerProducts.map((_, index) => (
           <div
             key={index}
             onClick={() => handleSlideChange(index)}
