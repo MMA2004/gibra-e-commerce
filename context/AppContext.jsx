@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
-import {useAuth, useUser} from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -23,13 +23,14 @@ export const AppContextProvider = (props) => {
     const [userData, setUserData] = useState(false)
     const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
+    const [favorites, setFavorites] = useState([])
 
     const fetchProductData = async () => {
         try {
 
             const { data } = await axios.get('/api/product/list');
 
-            if(data.success){
+            if (data.success) {
                 setProducts(data.products)
             } else {
                 toast.error(data.message);
@@ -42,7 +43,7 @@ export const AppContextProvider = (props) => {
 
     const fetchUserData = async () => {
         try {
-            if(user.publicMetadata.role === "seller") {
+            if (user.publicMetadata.role === "seller") {
                 setIsSeller(true)
             }
 
@@ -53,6 +54,7 @@ export const AppContextProvider = (props) => {
             if (data.success) {
                 setUserData(data.user)
                 setCartItems(data.user.cartItems)
+                setFavorites(data.user.favorites || [])
             } else {
                 toast.error(data.message)
             }
@@ -78,12 +80,12 @@ export const AppContextProvider = (props) => {
             try {
                 const token = await getToken()
 
-                await axios.post('/api/cart/update', {cartData}, {headers: { Authorization: `Bearer ${token}` }})
+                await axios.post('/api/cart/update', { cartData }, { headers: { Authorization: `Bearer ${token}` } })
 
                 toast.success("Item added to cart");
             } catch (e) {
                 toast.error(e.message)
-                
+
             }
         }
 
@@ -103,7 +105,7 @@ export const AppContextProvider = (props) => {
             try {
                 const token = await getToken()
 
-                await axios.post('/api/cart/update', {cartData}, {headers: { Authorization: `Bearer ${token}` }})
+                await axios.post('/api/cart/update', { cartData }, { headers: { Authorization: `Bearer ${token}` } })
 
                 toast.success("Cart updated");
             } catch (e) {
@@ -112,6 +114,24 @@ export const AppContextProvider = (props) => {
             }
         }
 
+    }
+
+    const toggleFavorite = async (productId) => {
+        try {
+            const token = await getToken();
+            const { data } = await axios.post('/api/favorites/toggle', { productId }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (data.success) {
+                setFavorites(data.favorites);
+                toast.success(favorites.includes(productId) ? "Removed from favorites" : "Added to favorites");
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
     }
 
     const getCartCount = () => {
@@ -140,7 +160,7 @@ export const AppContextProvider = (props) => {
     }, [])
 
     useEffect(() => {
-        if(user) {
+        if (user) {
             fetchUserData()
         }
     }, [user])
@@ -153,7 +173,8 @@ export const AppContextProvider = (props) => {
         products, fetchProductData,
         cartItems, setCartItems,
         addToCart, updateCartQuantity,
-        getCartCount, getCartAmount
+        getCartCount, getCartAmount,
+        favorites, toggleFavorite
     }
 
     return (

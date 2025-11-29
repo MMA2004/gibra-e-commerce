@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import Footer from "@/components/seller/Footer";
 
 const AddProduct = () => {
 
@@ -53,7 +54,7 @@ const AddProduct = () => {
         toast.error(data.message);
       }
 
-    } catch (error){
+    } catch (error) {
       toast.error(error.message);
     }
 
@@ -172,7 +173,7 @@ const AddProduct = () => {
           ADD
         </button>
       </form>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };
