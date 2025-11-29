@@ -54,7 +54,7 @@ export const AppContextProvider = (props) => {
             if (data.success) {
                 setUserData(data.user)
                 setCartItems(data.user.cartItems)
-                setFavorites(data.user.favorites || [])
+                setFavorites(data.user.favorites)
             } else {
                 toast.error(data.message)
             }

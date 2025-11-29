@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { assets, BagIcon, BoxIcon, CartIcon, HomeIcon } from "@/assets/assets";
+import { assets, BagIcon, BoxIcon, CartIcon, HomeIcon, StarIcon } from "@/assets/assets";
 import Link from "next/link"
 import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
@@ -47,6 +47,9 @@ const Navbar = () => {
               <UserButton.MenuItems>
                 <UserButton.Action label={"My Orders"} labelIcon={<BagIcon />} onClick={() => router.push('/my-orders')} />
               </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Action label={"Favorites"} labelIcon={<StarIcon />} onClick={() => router.push('/favorites')} />
+              </UserButton.MenuItems>
             </UserButton>
           </>
           : <button onClick={openSignIn} className="flex items-center gap-2 hover:text-gray-900 transition">
@@ -71,6 +74,9 @@ const Navbar = () => {
               </UserButton.MenuItems>
               <UserButton.MenuItems>
                 <UserButton.Action label={"My Orders"} labelIcon={<BagIcon />} onClick={() => router.push('/my-orders')} />
+              </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Action label={"Favorites"} labelIcon={<StarIcon />} onClick={() => router.push('/favorites')} />
               </UserButton.MenuItems>
             </UserButton>
           </>

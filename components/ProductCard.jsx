@@ -28,8 +28,7 @@ const ProductCard = ({ product }) => {
                 >
                     <Image
                         className="h-3 w-3"
-                        src={assets.heart_icon}
-                        //src={isFavorite ? assets.heart_filled_icon : assets.heart_icon}
+                        src={isFavorite ? assets.heart_fill : assets.heart_icon}
                         alt="heart_icon"
                     />
                 </button>
